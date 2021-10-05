@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-
-    dd(\Form::create(StoreForm::class, new Dog));
-    return view('welcome');
+    return view('welcome', [
+        'form' => \Form::create(StoreForm::class, new Dog)
+    ]);
 });

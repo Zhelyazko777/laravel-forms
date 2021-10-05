@@ -1,6 +1,6 @@
 .idea
 
-lib/composer.lock
+composer.lock
 lib/vendor
 
 demo/node_modules

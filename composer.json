@@ -31,7 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Zhelyazko777\\Forms\\": "src"
+            "Zhelyazko777\\Forms\\": "lib/src"
         }
     },
     "autoload-dev": {
