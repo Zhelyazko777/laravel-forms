@@ -1,0 +1,58 @@
+{
+    "name": "zhelyazko777/laravel-forms",
+    "description": "Simple object mapper for Laravel",
+    "keywords": [
+        "zhelyazko777",
+        "laravel",
+        "laravel-forms"
+    ],
+    "homepage": "https://github.com/zhelyazko777/laravel-forms",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":Zhelyazko Georgiev",
+            "email": "zhelyazko777@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/contracts": "^8.37",
+        "illuminate/database": "^8.0",
+        "zhelyazko777/laravel-simple-mapper": "dev-master",
+        "zhelyazko777/php-utilities": "dev-master"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^5.3",
+        "orchestra/testbench": "^6.15",
+        "pestphp/pest": "^1.18",
+        "pestphp/pest-plugin-laravel": "^1.1",
+        "vimeo/psalm": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zhelyazko777\\Forms\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zhelyazko777\\Forms\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/pest --no-coverage",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zhelyazko777\\Forms\\FormServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
