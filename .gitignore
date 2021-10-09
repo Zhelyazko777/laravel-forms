@@ -1,18 +1,4 @@
 .idea
 
 composer.lock
-lib/vendor
-
-demo/node_modules
-demo/vendor
-demo/public/hot
-demo/public/storage
-demo/storage/*.key
-demo/.env
-demo/.env.backup
-demo/.phpunit.result.cache
-demo/docker-compose.override.yml
-demo/Homestead.json
-demo/Homestead.yaml
-demo/npm-debug.log
-demo/yarn-error.log
+vendor
