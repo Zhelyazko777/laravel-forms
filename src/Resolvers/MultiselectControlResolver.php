@@ -9,6 +9,7 @@ use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedMultiselectFormControl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Zhelyazko777\LaravelSimpleMapper\SimpleMapper;
 
 class MultiselectControlResolver extends BaseControlResolver
 {
@@ -20,7 +21,7 @@ class MultiselectControlResolver extends BaseControlResolver
     public function resolve(BaseFormControlConfig $control, Model $model): BaseResolvedFormControl
     {
         /** @var ResolvedMultiselectFormControl $controlToReturn */
-        $controlToReturn = \Mapper::map($control, new ResolvedMultiselectFormControl());
+        $controlToReturn = SimpleMapper::map($control, new ResolvedMultiselectFormControl());
         /** @var Builder $query */
         $query = $control->getOptionsQuery();
         $textProp = call_user_func($control->getModel().'::selectTextProperty');

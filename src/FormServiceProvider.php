@@ -8,6 +8,7 @@ use Zhelyazko777\Forms\Resolvers\Contracts\FormResolverInterface;
 use Zhelyazko777\Forms\Resolvers\FormResolver;
 use Illuminate\Support\ServiceProvider;
 use Zhelyazko777\LaravelSimpleMapper\SimpleMapperFacade;
+use Zhelyazko777\LaravelSimpleMapper\SimpleMapperServiceProvider;
 
 class FormServiceProvider extends ServiceProvider
 {
@@ -21,8 +22,6 @@ class FormServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->register('Zhelyazko777\\LaravelSimpleMapper\\SimpleMapperServiceProvider');
-        $this->app->alias('Mapper', SimpleMapperFacade::class);
         $this->app->bind('laravelForms', function() {
             return new Form;
         });
