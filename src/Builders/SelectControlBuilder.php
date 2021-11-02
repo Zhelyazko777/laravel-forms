@@ -22,7 +22,13 @@ class SelectControlBuilder extends BaseSelectControlBuilder
         $tableReferencePropName = $propConnectionParts[count($propConnectionParts) - 1];
         $propParts = explode('_', $tableReferencePropName);
         $tablePropName = $propParts[count($propParts) - 1];
-        $tableName = str_replace("_$tablePropName", '', $tableReferencePropName) . 's';
+        $tableName = str_replace("_$tablePropName", '', $tableReferencePropName);
+
+        if (str_ends_with($tableName, 'y')) {
+            $tableName = rtrim($tableName, 'y') . 'ies';
+        } else {
+            $tableName .= 's';
+        }
 
         return "$tableName,$tablePropName";
     }
