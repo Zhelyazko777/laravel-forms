@@ -24,10 +24,30 @@ abstract class BaseFormControlConfig
 
     private bool $disabled = false;
 
+    private bool $hidden = false;
+
     /**
      * @var array<string, string>
      */
     private array $errorMessages = [];
+
+    /**
+     * @return bool
+     */
+    public function getHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param  bool  $hidden
+     * @return BaseFormControlConfig
+     */
+    public function setHidden(bool $hidden): BaseFormControlConfig
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
 
     /**
      * @return string[]

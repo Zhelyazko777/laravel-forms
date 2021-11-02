@@ -48,6 +48,12 @@ abstract class BaseControlBuilder implements CanExport
         return $this;
     }
 
+    public function hide(): static
+    {
+        $this->config->setHidden(true);
+        return $this;
+    }
+
     public function addValidationRule(mixed $rule, ?string $message = null): static
     {
         if (!in_array($rule, $this->config->getRules())) {

@@ -33,10 +33,30 @@ abstract class BaseResolvedFormControl implements \JsonSerializable
 
     private mixed $value;
 
+    private bool $hidden = false;
+
     /**
      * @var array<string, string>
      */
     private array $errorMessages = [];
+
+    /**
+     * @return bool
+     */
+    public function getHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param  bool  $hidden
+     * @return BaseResolvedFormControl
+     */
+    public function setHidden(bool $hidden): BaseResolvedFormControl
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
 
     /**
      * @return array<string, string>
