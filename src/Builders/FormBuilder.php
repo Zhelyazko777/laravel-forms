@@ -22,6 +22,17 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Add JavaScript callback to process the form
+     * @param  string  $name
+     * @return $this
+     */
+    public function addCallback(string $name): self
+    {
+        $this->config->setCallback($name);
+        return $this;
+    }
+
     public function addInput(string $name, callable $callback): self
     {
         $builder = new InputControlBuilder($name);

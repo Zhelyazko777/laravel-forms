@@ -16,6 +16,26 @@ class FormConfig
 
     private string $action = '';
 
+    private ?string $callback = null;
+
+    /**
+     * @return string|null
+     */
+    public function getCallback(): ?string
+    {
+        return $this->callback;
+    }
+
+    /**
+     * @param  string|null  $callback
+     * @return FormConfig
+     */
+    public function setCallback(?string $callback): FormConfig
+    {
+        $this->callback = $callback;
+        return $this;
+    }
+
     /**
      * @return BaseFormControlConfig[]
      */
