@@ -31,7 +31,7 @@ abstract class BaseFormControlConfig
      */
     private array $errorMessages = [];
 
-    private mixed $value;
+    private mixed $value = null;
 
     /**
      * @return mixed

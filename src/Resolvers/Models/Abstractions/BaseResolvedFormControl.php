@@ -31,7 +31,7 @@ abstract class BaseResolvedFormControl implements \JsonSerializable
 
     private string $type = '';
 
-    private mixed $value;
+    private mixed $value = null;
 
     private bool $hidden = false;
 
