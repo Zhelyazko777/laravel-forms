@@ -28,13 +28,14 @@ class MultiselectControlResolver extends BaseControlResolver
         $valueProp = call_user_func($control->getModel().'::selectValueProperty');
         $controlToReturn->setOptions($query->get([ $valueProp . ' as value', $textProp . ' as text' ])->toArray());
 
-        $nameParts = explode(':', $control->getName());
-        $value = $model;
-        foreach ($nameParts as $part)
-        {
-            $value = $value->{$part};
+        if (is_null($controlToReturn->getValue())) {
+            $nameParts = explode(':', $control->getName());
+            $value = $model;
+            foreach ($nameParts as $part) {
+                $value = $value->{$part};
+            }
+            $controlToReturn->setValue($this->mapValuesToSelectOptions($value->toArray(), $textProp, $valueProp));
         }
-        $controlToReturn->setValue($this->mapValuesToSelectOptions($value->toArray(), $textProp, $valueProp));
 
         return $controlToReturn;
     }

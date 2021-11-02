@@ -27,13 +27,15 @@ class SelectControlResolver extends BaseControlResolver
         $textProp = call_user_func($control->getModel().'::selectTextProperty');
         $valueProp = call_user_func($control->getModel().'::selectValueProperty');
         $controlToReturn->setOptions($query->get([ $valueProp . ' as value', $textProp . ' as text' ])->toArray());
-        $nameParts = explode(':', $control->getName());
-        $value = $model;
-        foreach ($nameParts as $part)
-        {
-            $value = $value->{$part};
+
+        if (is_null($controlToReturn->getValue())) {
+            $nameParts = explode(':', $control->getName());
+            $value = $model;
+            foreach ($nameParts as $part) {
+                $value = $value->{$part};
+            }
+            $controlToReturn->setValue($value);
         }
-        $controlToReturn->setValue($value);
 
         return $controlToReturn;
     }

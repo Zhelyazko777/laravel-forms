@@ -15,13 +15,16 @@ class InputControlResolver extends BaseControlResolver
         /** @var ResolvedInputFormControl $controlToReturn */
         $controlToReturn = SimpleMapper::map($control, new ResolvedInputFormControl());
 
-        $nameParts = explode(':', $control->getName());
-        $value = $model;
-        foreach ($nameParts as $part)
-        {
-            $value = $value->{$part};
+        if (is_null($controlToReturn->getValue())) {
+            $nameParts = explode(':', $control->getName());
+            $value = $model;
+            foreach ($nameParts as $part)
+            {
+                $value = $value->{$part};
+            }
+            $controlToReturn->setValue($value);
         }
-        $controlToReturn->setValue($value);
+
 
         return $controlToReturn;
     }

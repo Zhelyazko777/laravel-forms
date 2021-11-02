@@ -31,6 +31,26 @@ abstract class BaseFormControlConfig
      */
     private array $errorMessages = [];
 
+    private mixed $value;
+
+    /**
+     * @return mixed
+     */
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param  mixed  $value
+     * @return BaseFormControlConfig
+     */
+    public function setValue(mixed $value): BaseFormControlConfig
+    {
+        $this->value = $value;
+        return $this;
+    }
+
     /**
      * @return bool
      */

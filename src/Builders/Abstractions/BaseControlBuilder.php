@@ -36,6 +36,12 @@ abstract class BaseControlBuilder implements CanExport
         return $this;
     }
 
+    public function withValue(mixed $value): static
+    {
+        $this->config->setValue($value);
+        return $this;
+    }
+
     public function makeRequired(?string $message = null): static
     {
         $this->addValidationRule('required', $message);

@@ -15,13 +15,14 @@ class TextareaControlResolver extends BaseControlResolver
         /** @var ResolvedTextareaFormControl $controlToReturn */
         $controlToReturn = SimpleMapper::map($control, new ResolvedTextareaFormControl());
 
-        $nameParts = explode(':', $control->getName());
-        $value = $model;
-        foreach ($nameParts as $part)
-        {
-            $value = $value->{$part};
+        if (is_null($controlToReturn->getValue())) {
+            $nameParts = explode(':', $control->getName());
+            $value = $model;
+            foreach ($nameParts as $part) {
+                $value = $value->{$part};
+            }
+            $controlToReturn->setValue($value);
         }
-        $controlToReturn->setValue($value);
 
         return $controlToReturn;
     }
