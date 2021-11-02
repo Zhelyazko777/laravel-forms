@@ -25,6 +25,26 @@ class FormData implements \JsonSerializable
 
     private string $action = '';
 
+    private ?string $callback = null;
+
+    /**
+     * @return string|null
+     */
+    public function getCallback(): ?string
+    {
+        return $this->callback;
+    }
+
+    /**
+     * @param  string|null  $callback
+     * @return FormData
+     */
+    public function setCallback(?string $callback): FormData
+    {
+        $this->callback = $callback;
+        return $this;
+    }
+
     /**
      * @return string
      */
@@ -85,6 +105,7 @@ class FormData implements \JsonSerializable
     {
         return [
             'action' => $this->getAction(),
+            'callback' => $this->getCallback(),
             'controls' => $this->getControls(),
             'submitButton' => $this->getSubmitButton(),
             'rules' => $this->getValidationRules(),

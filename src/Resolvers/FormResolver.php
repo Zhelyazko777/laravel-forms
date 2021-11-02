@@ -35,6 +35,7 @@ class FormResolver implements FormResolverInterface
         );
         $formData->setSubmitButton($config->getSubmitButton());
         $formData->setAction($config->getAction());
+        $formData->setCallback($config->getCallback());
 
         return $formData;
     }
