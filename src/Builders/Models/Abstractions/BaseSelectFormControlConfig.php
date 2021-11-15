@@ -50,22 +50,4 @@ abstract class BaseSelectFormControlConfig extends BaseFormControlConfig
         $this->optionsQuery = $optionsQuery;
         return $this;
     }
-
-    /**
-     * @return string|null
-     */
-    public function getModel(): ?string
-    {
-        return $this->model;
-    }
-
-    /**
-     * @param  string|null  $model
-     * @return BaseSelectFormControlConfig
-     */
-    public function setModel(?string $model): BaseSelectFormControlConfig
-    {
-        $this->model = $model;
-        return $this;
-    }
 }

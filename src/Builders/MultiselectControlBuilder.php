@@ -26,6 +26,10 @@ class MultiselectControlBuilder extends BaseSelectControlBuilder
         return MultiselectFormControlConfig::class;
     }
 
+    /**
+     * Makes the delete of the connections "soft"
+     * @return $this
+     */
     public function softDeleteConnections(): self
     {
         $this->config->setSoftDeleteConnections(true);

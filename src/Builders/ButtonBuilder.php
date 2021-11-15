@@ -14,6 +14,11 @@ class ButtonBuilder implements CanExport
         $this->config = new ButtonFormControlConfig();
     }
 
+    /**
+     * Adds the button text
+     * @param  string  $text
+     * @return $this
+     */
     public function addText(string $text): self
     {
         $this->config->setText($text);
@@ -21,6 +26,10 @@ class ButtonBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Exports the config object
+     * @return ButtonFormControlConfig
+     */
     public function export(): ButtonFormControlConfig
     {
         return $this->config;

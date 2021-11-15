@@ -15,6 +15,11 @@ class FormBuilder implements CanExport
         $this->config = new FormConfig();
     }
 
+    /**
+     * Adds the route which will be hit on form submit
+     * @param  string  $action
+     * @return $this
+     */
     public function addAction(string $action): self
     {
         $this->config->setAction($action);
@@ -23,7 +28,8 @@ class FormBuilder implements CanExport
     }
 
     /**
-     * Add JavaScript callback to process the form
+     * Add JavaScript callback to process the form.
+     * Called on form submit.
      * @param  string  $name
      * @return $this
      */
@@ -33,6 +39,12 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds field of type input
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return $this
+     */
     public function addInput(string $name, callable $callback): self
     {
         $builder = new InputControlBuilder($name);
@@ -42,6 +54,12 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds field of type select
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return $this
+     */
     public function addSelect(string $name, callable $callback): self
     {
         $builder = new SelectControlBuilder($name);
@@ -51,6 +69,12 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds field of type multiselect
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return $this
+     */
     public function addMultiselect(string $name, callable $callback): self
     {
         $builder = new MultiselectControlBuilder($name);
@@ -60,6 +84,12 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds field of type switch
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return $this
+     */
     public function addSwitch(string $name, callable $callback): self
     {
         $builder = new SwitchControlBuilder($name);
@@ -69,6 +99,12 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds field of type textarea
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return $this
+     */
     public function addTextarea(string $name, callable $callback): self
     {
         $builder = new TextareaControlBuilder($name);
@@ -78,6 +114,12 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds gallery upload field
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return $this
+     */
     public function addGalleryUploader(string $name, callable $callback): self
     {
         $builder = new GalleryUploaderControlBuilder($name);
@@ -87,6 +129,11 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Adds submit button
+     * @param  callable  $callback
+     * @return $this\
+     */
     public function addSubmitButton(callable $callback): self
     {
         $builder = new ButtonBuilder();
@@ -96,6 +143,10 @@ class FormBuilder implements CanExport
         return $this;
     }
 
+    /**
+     * Exports the config object
+     * @return FormConfig
+     */
     public function export(): FormConfig
     {
         return $this->config;

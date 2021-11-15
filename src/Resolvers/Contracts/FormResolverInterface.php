@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 interface FormResolverInterface
 {
+    /**
+     * @param  FormConfig  $config
+     * @param  Model  $model
+     * @return FormData
+     */
     public function resolve(FormConfig $config, Model $model): FormData;
 }

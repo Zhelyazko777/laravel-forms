@@ -10,14 +10,10 @@ abstract class BaseFormControlConfig
 
     private int $columnsToTakeOnMobile = 12;
 
-    /**
-     * @var array<string|object>
-     */
+    /** @var array<string|object> */
     private array $rules = [];
 
-    /**
-     * @var array<string|object>
-     */
+    /** @var array<string|object> */
     private array $singleRules = [];
 
     private string $name = '';
@@ -26,9 +22,7 @@ abstract class BaseFormControlConfig
 
     private bool $hidden = false;
 
-    /**
-     * @var array<string, string>
-     */
+    /** @var array<string, string> */
     private array $errorMessages = [];
 
     private mixed $value = null;

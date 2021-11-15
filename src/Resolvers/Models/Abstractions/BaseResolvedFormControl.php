@@ -2,7 +2,6 @@
 
 namespace Zhelyazko777\Forms\Resolvers\Models\Abstractions;
 
-use Illuminate\Support\Collection;
 use Zhelyazko777\Utilities\Exportable;
 
 abstract class BaseResolvedFormControl implements \JsonSerializable
@@ -15,14 +14,10 @@ abstract class BaseResolvedFormControl implements \JsonSerializable
 
     private int $columnsToTakeOnMobile = 0;
 
-    /**
-     * @var array<string|object>
-     */
+    /** @var array<string|object> */
     private array $rules = [];
 
-    /**
-     * @var array<string|object>
-     */
+    /** @var array<string|object> */
     private array $singleRules = [];
 
     private string $name = '';
@@ -35,14 +30,10 @@ abstract class BaseResolvedFormControl implements \JsonSerializable
 
     private bool $hidden = false;
 
-    /**
-     * @var array<string, string>
-     */
+    /** @var array<string, string> */
     private array $errorMessages = [];
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function getHidden(): bool
     {
         return $this->hidden;

@@ -3,20 +3,20 @@
 namespace Zhelyazko777\Forms\Resolvers;
 
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
-use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
-use Zhelyazko777\Forms\Resolvers\Abstractions\BaseControlResolver;
+use Zhelyazko777\Forms\Resolvers\Abstractions\BaseSelectControlResolver;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedMultiselectFormControl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Zhelyazko777\LaravelSimpleMapper\SimpleMapper;
 
-class MultiselectControlResolver extends BaseControlResolver
+class MultiselectControlResolver extends BaseSelectControlResolver
 {
     /**
-     * @param  MultiselectFormControlConfig  $control
+     * @param  BaseFormControlConfig  $control
      * @param  Model  $model
      * @return BaseResolvedFormControl
+     * @throws \Exception
      */
     public function resolve(BaseFormControlConfig $control, Model $model): BaseResolvedFormControl
     {
@@ -24,27 +24,53 @@ class MultiselectControlResolver extends BaseControlResolver
         $controlToReturn = SimpleMapper::map($control, new ResolvedMultiselectFormControl());
         /** @var Builder $query */
         $query = $control->getOptionsQuery();
-        $textProp = call_user_func($control->getModel().'::selectTextProperty');
-        $valueProp = call_user_func($control->getModel().'::selectValueProperty');
-        $controlToReturn->setOptions($query->get([ $valueProp . ' as value', $textProp . ' as text' ])->toArray());
+        $fixedOptions = $control->getFixedOptions();
+        $hasFixedOptions = !empty($fixedOptions);
+        $hasQuery = !is_null($query);
 
-        if (is_null($controlToReturn->getValue())) {
-            $nameParts = explode(':', $control->getName());
-            $value = $model;
-            foreach ($nameParts as $part) {
-                $value = $value->{$part};
+        if (!$hasFixedOptions && !$hasQuery) {
+            throw new \Exception('You should set fixed options or add a model in order to fetch the select options.');
+        }
+
+        if (!$hasFixedOptions && $hasQuery) {
+            $optionsModel = $query->getModel();
+            $textProp = call_user_func($optionsModel.'::selectTextProperty');
+            $valueProp = call_user_func($optionsModel.'::selectValueProperty');
+            if (is_null($controlToReturn->getValue())) {
+                $controlToReturn->setValue($this->fetchFieldValue($control, $model, $textProp, $valueProp));
             }
-            $controlToReturn->setValue($this->mapValuesToSelectOptions($value->toArray(), $textProp, $valueProp));
+
+            $controlToReturn->setOptions($this->getQuerySelectOptions($query, $textProp, $valueProp));
+        } else {
+            $controlToReturn->setOptions($this->getFixedSelectOptions($fixedOptions));
         }
 
         return $controlToReturn;
     }
 
     /**
+     * @param  BaseFormControlConfig  $control
+     * @param  Model  $model
+     * @param  string  $textProp
+     * @param  string  $valueProp
+     * @return array<mixed>
+     */
+    private function fetchFieldValue(BaseFormControlConfig $control, Model $model, string $textProp, string $valueProp): array
+    {
+        $nameParts = explode(':', $control->getName());
+        $value = $model;
+        foreach ($nameParts as $part) {
+            $value = $value->{$part};
+        }
+
+        return $this->mapValuesToSelectOptions($value->toArray(), $textProp, $valueProp);
+    }
+
+    /**
      * @param  array<string, mixed>  $optionsData
      * @param  string  $textPropName
      * @param  string  $valuePropName
-     * @return array<int, array<string, int|string>>
+     * @return array<mixed>
      */
     private function mapValuesToSelectOptions(array $optionsData, string $textPropName, string $valuePropName): array
     {

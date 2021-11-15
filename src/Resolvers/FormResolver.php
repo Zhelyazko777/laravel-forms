@@ -16,9 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FormResolver implements FormResolverInterface
 {
-    /**
-     * @var array<string>
-     */
+    /** @var array<string, string> */
     private array $controlResolvers = [
         InputFormControlConfig::class => InputControlResolver::class,
         TextareaFormControlConfig::class => TextareaControlResolver::class,
@@ -30,23 +28,12 @@ class FormResolver implements FormResolverInterface
     {
         $formData = new FormData($config);
 
-        $formData->setControls(
-            $this->resolveControls($config->getControls(), $model)
-        );
+        $formData->setControls($this->resolveControls($config->getControls(), $model));
         $formData->setSubmitButton($config->getSubmitButton());
         $formData->setAction($config->getAction());
         $formData->setCallback($config->getCallback());
 
         return $formData;
-    }
-
-    /**
-     * @param  array<string, mixed>  $config
-     * @return array<string, mixed>
-     */
-    public function resolveValidationRules(array $config): array
-    {
-        return $config['rules'];
     }
 
     /**

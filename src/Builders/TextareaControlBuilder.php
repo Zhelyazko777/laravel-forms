@@ -2,11 +2,11 @@
 
 namespace Zhelyazko777\Forms\Builders;
 
-use Zhelyazko777\Forms\Builders\Abstractions\TextControlBuilder;
+use Zhelyazko777\Forms\Builders\Abstractions\BaseTextControlBuilder;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\TextareaFormControlConfig;
 
-class TextareaControlBuilder extends TextControlBuilder
+class TextareaControlBuilder extends BaseTextControlBuilder
 {
     /**
      * @var TextareaFormControlConfig
@@ -23,6 +23,11 @@ class TextareaControlBuilder extends TextControlBuilder
         parent::__construct($name);
     }
 
+    /**
+     * Adds "cols" attribute to the textarea
+     * @param  int  $numberOfCols
+     * @return $this
+     */
     public function withCols(int $numberOfCols): self
     {
         $this->config->setCols($numberOfCols);
@@ -30,6 +35,11 @@ class TextareaControlBuilder extends TextControlBuilder
         return $this;
     }
 
+    /**
+     * Adds "rows" attribute to the textarea
+     * @param  int  $numberOfRows
+     * @return $this
+     */
     public function withRows(int $numberOfRows): self
     {
         $this->config->setRows($numberOfRows);

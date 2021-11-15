@@ -87,20 +87,6 @@ class FormData implements \JsonSerializable
         $this->submitButton = $submitButton;
     }
 
-    /**
-     * @return array<string, array<object|string>>
-     */
-    private function getValidationRules(): array
-    {
-        $rules = [];
-        foreach ($this->getControls() as $control)
-        {
-            $rules[$control->getName()] = $control->getRules();
-        }
-
-        return $rules;
-    }
-
     public function jsonSerialize()
     {
         return [
@@ -108,7 +94,6 @@ class FormData implements \JsonSerializable
             'callback' => $this->getCallback(),
             'controls' => $this->getControls(),
             'submitButton' => $this->getSubmitButton(),
-            'rules' => $this->getValidationRules(),
         ];
     }
 }
