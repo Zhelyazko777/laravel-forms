@@ -20,6 +20,11 @@ class Owner extends SelectableModel
         return $this->belongsToMany(Pet::class);
     }
 
+    public function homes(): BelongsToMany
+    {
+        return $this->belongsToMany(Home::class);
+    }
+
     public static function selectTextProperty(): string
     {
         return 'name';

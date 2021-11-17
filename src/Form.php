@@ -9,6 +9,7 @@ use Zhelyazko777\Forms\Models\FormData;
 use Zhelyazko777\Forms\Resolvers\Contracts\FormResolverInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Zhelyazko777\Forms\Resolvers\Models\ResolvedForm;
 
 class Form
 {
@@ -17,9 +18,9 @@ class Form
      * @param  string  $form
      * @param  Model  $model
      * @param  array<string, mixed>  $args
-     * @return FormData
+     * @return ResolvedForm
      */
-    public function create(string $form, Model $model, array $args = []): FormData
+    public function create(string $form, Model $model, array $args = []): ResolvedForm
     {
         $resolver = app()->get(FormResolverInterface::class);
         $formConfig = $this->getFormConfig($form, $model, $args);

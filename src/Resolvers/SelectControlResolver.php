@@ -3,6 +3,7 @@
 namespace Zhelyazko777\Forms\Resolvers;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\Abstractions\BaseSelectControlResolver;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
@@ -26,39 +27,48 @@ class SelectControlResolver extends BaseSelectControlResolver
         $getOptionsQuery = $control->getGetOptionsQuery();
 
         if (empty($fixedOptions)) {
-            $relation = $this->getRelation($control->getName(), $model);
-            $optionsModel = get_class($relation->getModel());
+            $modelNamespace = $this->getModelNamespace($model);
+            $optionsModel = $this->getOptionsModel($control->getName(), $modelNamespace);
             $textProp = call_user_func($optionsModel.'::selectTextProperty');
             $valueProp = call_user_func($optionsModel.'::selectValueProperty');
             $query = call_user_func("$optionsModel::query");
-            $relationColumnName = $relation->getRelationName();
-
             if (!is_null($getOptionsQuery)) {
                 $query = $getOptionsQuery->call($this, [ $query ]);
             }
             $controlToReturn->setOptions($this->getQuerySelectOptions($query, $textProp, $valueProp));
-
-            if (is_null($controlToReturn->getValue())) {
-                $controlToReturn->setValue(
-                    $relation
-                        ->first(["$relationColumnName.$valueProp"])
-                        ?->{$valueProp}
-                );
-            }
         } else {
             $controlToReturn->setOptions($this->getFixedSelectOptions($fixedOptions));
+        }
+
+        if (is_null($controlToReturn->getValue())) {
+            $controlToReturn->setValue($this->fetchValue($control->getName(), $model));
         }
 
         return $controlToReturn;
     }
 
-    private function getRelation(string $controlName, Model $model): BelongsToMany
+    private function getModelNamespace(Model $model): string
     {
-        $nameParts = explode(':', $controlName);
+        $modelName = get_class($model);
+        return substr($modelName, 0, strrpos($modelName, '\\'));
+    }
+
+    private function getOptionsModel(string $propertyName, string $namespace): string
+    {
+        $propertyParts = explode('.', $propertyName);
+        $property = end($propertyParts);
+        $tableName = str_replace('_id', '', $property);
+        $dbModelName = Str::studly(Str::singular($tableName));
+
+        return "$namespace\\$dbModelName";
+    }
+
+    private function fetchValue(string $controlName, Model $model): mixed
+    {
+        $nameParts = explode('.', $controlName);
         $value = $model;
         foreach ($nameParts as $part) {
-            /** @var BelongsToMany $value */
-            $value = $value->{$part}();
+            $value = $value->{$part};
         }
 
         return $value;

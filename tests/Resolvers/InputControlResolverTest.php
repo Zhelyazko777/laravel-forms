@@ -2,26 +2,26 @@
 
 namespace Zhelyazko777\Forms\Tests\Resolvers;
 
-use Zhelyazko777\Forms\Builders\Models\TextareaFormControlConfig;
-use Zhelyazko777\Forms\Resolvers\Models\ResolvedTextareaFormControl;
-use Zhelyazko777\Forms\Resolvers\TextareaControlResolver;
+use Zhelyazko777\Forms\Builders\Models\InputFormControlConfig;
+use Zhelyazko777\Forms\Resolvers\InputControlResolver;
+use Zhelyazko777\Forms\Resolvers\Models\ResolvedInputFormControl;
 use Zhelyazko777\Forms\Tests\TestCase;
 use Zhelyazko777\Forms\Tests\TestClasses\Pet;
 
-class TextareaResolverTest extends TestCase
+class InputControlResolverTest extends TestCase
 {
-    private TextareaControlResolver $resolver;
+    private InputControlResolver $resolver;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resolver = new TextareaControlResolver;
+        $this->resolver = new InputControlResolver;
     }
 
     public function test_resolve_should_populate_model_value()
     {
         $name = 'Test name';
-        $config = (new TextareaFormControlConfig)->setName('name');
+        $config = (new InputFormControlConfig)->setName('name');
         $model = new Pet;
         $model->name = $name;
 
@@ -33,7 +33,7 @@ class TextareaResolverTest extends TestCase
     public function test_resolve_should_populate_given_default_value()
     {
         $name = 'Test name';
-        $config = (new TextareaFormControlConfig)->setName('name')->setValue($name);
+        $config = (new InputFormControlConfig)->setName('name')->setValue($name);
         $model = new Pet;
 
         $resolvedControl = $this->resolver->resolve($config, $model);
@@ -44,7 +44,7 @@ class TextareaResolverTest extends TestCase
     public function test_resolve_should_populate_given_default_value_and_override_model_value()
     {
         $name = 'Test name';
-        $config = (new TextareaFormControlConfig)->setName('name')->setValue($name);
+        $config = (new InputFormControlConfig)->setName('name')->setValue($name);
         $model = new Pet;
         $model->name = 'Some diff value';
 
@@ -53,13 +53,13 @@ class TextareaResolverTest extends TestCase
         $this->assertEquals($name, $resolvedControl->getValue());
     }
 
-    public function test_resolve_should_return_resolved_textarea_form_control()
+    public function test_resolve_should_return_resolved_input_form_control()
     {
-        $config = (new TextareaFormControlConfig)->setName('name');
+        $config = (new InputFormControlConfig)->setName('name');
         $model = new Pet;
 
         $resolvedControl = $this->resolver->resolve($config, $model);
 
-        $this->assertEquals(ResolvedTextareaFormControl::class, get_class($resolvedControl));
+        $this->assertEquals(ResolvedInputFormControl::class, get_class($resolvedControl));
     }
 }

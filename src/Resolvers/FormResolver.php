@@ -2,19 +2,18 @@
 
 namespace Zhelyazko777\Forms\Resolvers;
 
-use http\Exception\InvalidArgumentException;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\Contracts\NonResolvableControlInterface;
 use Zhelyazko777\Forms\Builders\Models\FormConfig;
 use Zhelyazko777\Forms\Builders\Models\InputFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\SelectFormControlConfig;
+use Zhelyazko777\Forms\Builders\Models\SwitchFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\TextareaFormControlConfig;
-use Zhelyazko777\Forms\Models\FormData;
-use Zhelyazko777\Forms\Resolvers\Abstractions\BaseControlResolver;
 use Zhelyazko777\Forms\Resolvers\Contracts\FormResolverInterface;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 use Illuminate\Database\Eloquent\Model;
+use Zhelyazko777\Forms\Resolvers\Models\ResolvedForm;
 
 class FormResolver implements FormResolverInterface
 {
@@ -24,18 +23,19 @@ class FormResolver implements FormResolverInterface
         TextareaFormControlConfig::class => TextareaControlResolver::class,
         SelectFormControlConfig::class => SelectControlResolver::class,
         MultiselectFormControlConfig::class => MultiselectControlResolver::class,
+        SwitchFormControlConfig::class => SwitchControlResolver::class,
     ];
 
-    public function resolve(FormConfig $config, Model $model): FormData
+    public function resolve(FormConfig $config, Model $model): ResolvedForm
     {
-        $formData = new FormData($config);
+        $resolvedForm = new ResolvedForm($config);
 
-        $formData->setControls($this->resolveControls($config->getControls(), $model));
-        $formData->setSubmitButton($config->getSubmitButton());
-        $formData->setAction($config->getAction());
-        $formData->setCallback($config->getCallback());
+        $resolvedForm->setControls($this->resolveControls($config->getControls(), $model));
+        $resolvedForm->setSubmitButton($config->getSubmitButton());
+        $resolvedForm->setAction($config->getAction());
+        $resolvedForm->setCallback($config->getCallback());
 
-        return $formData;
+        return $resolvedForm;
     }
 
     /**

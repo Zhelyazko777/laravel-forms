@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PetOwner extends Model
+class OwnerPet extends Model
 {
     use HasTimestamps, SoftDeletes;
 

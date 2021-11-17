@@ -8,6 +8,7 @@ use Zhelyazko777\Forms\Resolvers\Models\ResolvedMultiselectFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedSelectFormControl;
 use Zhelyazko777\Forms\Resolvers\MultiselectControlResolver;
 use Zhelyazko777\Forms\Tests\TestCase;
+use Zhelyazko777\Forms\Tests\TestClasses\Home;
 use Zhelyazko777\Forms\Tests\TestClasses\Owner;
 use Zhelyazko777\Forms\Tests\TestClasses\Pet;
 
@@ -42,7 +43,7 @@ class MultiselectResolverTest extends TestCase
                 'value' => 2,
                 'text' => 'Option 2'
             ],
-        ]);
+        ])->setName('owners');
 
         /** @var ResolvedMultiselectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, new Pet);
@@ -74,7 +75,7 @@ class MultiselectResolverTest extends TestCase
                 'value' => 2,
                 'text' => 'Option 2'
             ],
-        ])->setValue([1, 2]);
+        ])->setName('owners')->setValue([1, 2]);
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, new Pet);
@@ -104,5 +105,37 @@ class MultiselectResolverTest extends TestCase
             ->pluck('pets.id')
             ->toArray();
         $this->assertEquals($mappedPets, $resolvedControl->getValue());
+    }
+
+    public function test_resolve_with_fixed_options_should_fetch_value_for_the_field_if_no_value_provided()
+    {
+        $config = (new SelectFormControlConfig)->setFixedOptions([
+            [
+                'value' => 1,
+                'text' => 'Option 1'
+            ],
+            [
+                'value' => 2,
+                'text' => 'Option 2'
+            ],
+            [
+                'value' => 3,
+                'text' => 'Option 3'
+            ],
+        ])->setName('pets');
+
+        /** @var ResolvedSelectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, Owner::first());
+
+        $this->assertEquals([1, 2, 3], $resolvedControl->getValue());
+    }
+
+    public function test_resolve_should_throw_exception_if_nested_property_given_for_name()
+    {
+        $this->expectExceptionMessage('We support only one level pivot table connections, yet.');
+        $config = (new MultiselectFormControlConfig)->setName('owners.pets');
+
+        /** @var ResolvedSelectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, Home::find(1));
     }
 }

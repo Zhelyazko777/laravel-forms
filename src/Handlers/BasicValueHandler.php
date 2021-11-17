@@ -10,7 +10,7 @@ class BasicValueHandler extends BaseControlHandler
 {
     public function handle(BaseFormControlConfig $config, Model $model, string $propertyName, mixed $value): void
     {
-        $propNameParts = explode(':', $propertyName);
+        $propNameParts = explode('.', $propertyName);
         switch (count($propNameParts)) {
             case 1:
                 $model->{$propNameParts[0]} = $value;

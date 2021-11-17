@@ -8,6 +8,8 @@ use Zhelyazko777\Forms\Resolvers\SelectControlResolver;
 use Zhelyazko777\Forms\Tests\TestCase;
 use Zhelyazko777\Forms\Tests\TestClasses\Owner;
 use Zhelyazko777\Forms\Tests\TestClasses\Pet;
+use Zhelyazko777\Forms\Tests\TestClasses\PetType;
+use Zhelyazko777\Forms\Tests\TestClasses\Toy;
 
 class SelectControlResolverTest extends TestCase
 {
@@ -22,7 +24,7 @@ class SelectControlResolverTest extends TestCase
 
     public function test_resolve_should_return_resolved_select_form_control_instance()
     {
-        $config = (new SelectFormControlConfig)->setName('owners');
+        $config = (new SelectFormControlConfig)->setName('pet_type_id');
 
         $resolvedControl = $this->resolver->resolve($config, new Pet);
 
@@ -32,7 +34,7 @@ class SelectControlResolverTest extends TestCase
     public function test_resolve_should_add_fixed_options_if_provided()
     {
         $config = (new SelectFormControlConfig)
-            ->setName('owners')
+            ->setName('pet_type_id')
             ->setFixedOptions([
             [
                 'value' => 1,
@@ -52,13 +54,13 @@ class SelectControlResolverTest extends TestCase
 
     public function test_resolve_should_fetch_options_if_no_fixed_values_provided()
     {
-        $config = (new SelectFormControlConfig)->setName('owners');
+        $config = (new SelectFormControlConfig)->setName('pet_type_id');
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, new Pet);
 
         $this->assertEquals(
-            Owner::query()->get([ 'name AS text', 'id AS value' ])->toArray(),
+            PetType::query()->get([ 'name AS text', 'id AS value' ])->toArray(),
             $resolvedControl->getOptions()
         );
     }
@@ -84,7 +86,7 @@ class SelectControlResolverTest extends TestCase
 
     public function test_resolve_should_override_value_with_fixed_value_if_provided()
     {
-        $config = (new SelectFormControlConfig)->setName('owners')->setValue(100);
+        $config = (new SelectFormControlConfig)->setName('pet_type_id')->setValue(100);
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, Pet::first());
@@ -94,10 +96,39 @@ class SelectControlResolverTest extends TestCase
 
     public function test_resolve_should_populate_value_if_not_provided()
     {
-        $config = (new SelectFormControlConfig)->setName('owners');
+        $config = (new SelectFormControlConfig)->setName('pet_type_id');
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, Pet::query()->find(5));
+
+        $this->assertEquals(2, $resolvedControl->getValue());
+    }
+
+    public function test_resolve_with_fixed_options_should_populate_value_if_not_provided()
+    {
+        $config = (new SelectFormControlConfig)->setFixedOptions([
+            [
+                'value' => 1,
+                'text' => 'Option 1'
+            ],
+            [
+                'value' => 2,
+                'text' => 'Option 2'
+            ],
+        ])->setName('pet_type_id');
+
+        /** @var ResolvedSelectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, Pet::query()->find(5));
+
+        $this->assertEquals(2, $resolvedControl->getValue());
+    }
+
+    public function test_resolve_should_fetch_value_if_property_is_nested()
+    {
+        $config = (new SelectFormControlConfig)->setName('pet.pet_type_id');
+
+        /** @var ResolvedSelectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, Toy::find(2));
 
         $this->assertEquals(3, $resolvedControl->getValue());
     }

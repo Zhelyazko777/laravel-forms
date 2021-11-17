@@ -1,24 +1,19 @@
 <?php
 
-namespace Zhelyazko777\Forms\Models;
+namespace Zhelyazko777\Forms\Resolvers\Models;
 
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\ButtonFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\FormConfig;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 
-class FormData implements \JsonSerializable
+class ResolvedForm
 {
-    private FormConfig $config;
+    public function __construct(
+        private FormConfig $config
+    ) { }
 
-    public function __construct(FormConfig $config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @var array<BaseResolvedFormControl|BaseFormControlConfig>
-     */
+    /** @var array<BaseResolvedFormControl|BaseFormControlConfig> */
     private array $controls = [];
 
     private ?ButtonFormControlConfig $submitButton = null;
@@ -37,9 +32,9 @@ class FormData implements \JsonSerializable
 
     /**
      * @param  string|null  $callback
-     * @return FormData
+     * @return static
      */
-    public function setCallback(?string $callback): FormData
+    public function setCallback(?string $callback): static
     {
         $this->callback = $callback;
         return $this;
@@ -70,23 +65,36 @@ class FormData implements \JsonSerializable
     }
 
     /**
-     * @param array<BaseResolvedFormControl|BaseFormControlConfig> $controls
+     * @param  array<BaseResolvedFormControl|BaseFormControlConfig>  $controls
+     * @return ResolvedForm
      */
-    public function setControls(array $controls): void
+    public function setControls(array $controls): static
     {
         $this->controls = $controls;
+        return $this;
     }
 
+    /**
+     * @return ButtonFormControlConfig|null
+     */
     public function getSubmitButton(): ?ButtonFormControlConfig
     {
         return $this->submitButton;
     }
 
-    public function setSubmitButton(?ButtonFormControlConfig $submitButton): void
+    /**
+     * @param  ButtonFormControlConfig|null  $submitButton
+     * @return $this
+     */
+    public function setSubmitButton(?ButtonFormControlConfig $submitButton): static
     {
         $this->submitButton = $submitButton;
+        return $this;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [
