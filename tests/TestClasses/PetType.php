@@ -2,13 +2,18 @@
 
 namespace Zhelyazko777\Forms\Tests\TestClasses;
 
-use Illuminate\Database\Eloquent\Model;
+use Zhelyazko777\Forms\Abstractions\SelectableModel;
 
-class PetType extends Model
+class PetType extends SelectableModel
 {
     public $timestamps = false;
 
     protected $fillable = ['*'];
 
     protected $table = 'pet_types';
+
+    public static function selectTextProperty(): string
+    {
+        return 'name';
+    }
 }

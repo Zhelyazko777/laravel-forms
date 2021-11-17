@@ -2,24 +2,22 @@
 
 namespace Zhelyazko777\Forms\Tests\TestClasses;
 
-use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Zhelyazko777\Forms\Abstractions\SelectableModel;
 
-class Pet extends SelectableModel
+class Owner extends SelectableModel
 {
-    use SoftDeletes, Timestamp;
+    public $timestamps = false;
 
     protected $fillable = ['*'];
 
-    protected $table = 'pets';
+    protected $table = 'owners';
 
-    public function owners(): BelongsToMany
+    public function pets(): BelongsToMany
     {
-        return $this->belongsToMany(Owner::class);
+        return $this->belongsToMany(Pet::class);
     }
 
     public static function selectTextProperty(): string

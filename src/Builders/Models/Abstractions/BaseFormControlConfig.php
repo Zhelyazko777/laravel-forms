@@ -2,6 +2,8 @@
 
 namespace Zhelyazko777\Forms\Builders\Models\Abstractions;
 
+use phpDocumentor\Reflection\Types\Callable_;
+
 abstract class BaseFormControlConfig
 {
     private string $label = '';
@@ -26,6 +28,26 @@ abstract class BaseFormControlConfig
     private array $errorMessages = [];
 
     private mixed $value = null;
+
+    private ?\Closure $getOptionsQuery = null;
+
+    /**
+     * @return \Closure|null
+     */
+    public function getGetOptionsQuery(): ?\Closure
+    {
+        return $this->getOptionsQuery;
+    }
+
+    /**
+     * @param  \Closure|null  $getOptionsQuery
+     * @return BaseFormControlConfig
+     */
+    public function setGetOptionsQuery(?\Closure $getOptionsQuery): BaseFormControlConfig
+    {
+        $this->getOptionsQuery = $getOptionsQuery;
+        return $this;
+    }
 
     /**
      * @return mixed

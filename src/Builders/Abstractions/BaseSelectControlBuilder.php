@@ -17,47 +17,23 @@ abstract class BaseSelectControlBuilder extends BaseControlBuilder
      * @param  array<mixed>  $options
      * @return static
      */
-    public function addFixedOptions(array $options): static
+    public function useFixedOptions(array $options): static
     {
         $this->config->setFixedOptions($options);
         return $this;
     }
 
     /**
-     * Adds the model from which the select
-     * options will be fetched
-     * @param  string  $model
-     * @param  callable|null  $callback
-     * @return static
-     * @throws \ReflectionException
+     * Adds query builder options to the query for fetching the options
+     * @param  callable  $callback
+     * @return $this
      */
-    public function addModel(string $model, ?callable $callback = null): static
+    public function useFetchedOptions(callable $callback): static
     {
-        $this->config->setOptionsQuery(call_user_func($model . '::query'));
-        $tableAndProp = $this->getFieldTableAndColumn($this->config->getName());
-        $this->addValidationRule("exists:$tableAndProp");
-
         if (!is_null($callback)) {
-            $callback($this->config->getOptionsQuery());
+            $this->config->setGetOptionsQuery(\Closure::fromCallable($callback));
         }
 
         return $this;
-    }
-
-    private function getFieldTableAndColumn(string $propertyName): string
-    {
-        $propConnectionParts = explode(':', $propertyName);
-        $tableReferencePropName = $propConnectionParts[count($propConnectionParts) - 1];
-        $propParts = explode('_', $tableReferencePropName);
-        $tablePropName = $propParts[count($propParts) - 1];
-        $tableName = str_replace("_$tablePropName", '', $tableReferencePropName);
-
-        if (str_ends_with($tableName, 'y')) {
-            $tableName = rtrim($tableName, 'y') . 'ies';
-        } else {
-            $tableName .= 's';
-        }
-
-        return "$tableName,$tablePropName";
     }
 }

@@ -73,7 +73,7 @@ abstract class BaseControlBuilderTest extends TestCase
     {
         $this->builder->makeRequired();
 
-        $this->assertEquals('required', $this->builder->export()->getRules()[0]);
+        $this->assertContains('required', $this->builder->export()->getRules());
     }
 
     public function test_make_required_with_msg_should_add_msg_to_config()
@@ -105,8 +105,7 @@ abstract class BaseControlBuilderTest extends TestCase
 
         $this->builder->addValidationRule($rule);
 
-        $this->assertCount(1, $this->builder->export()->getRules());
-        $this->assertEquals($rule, $this->builder->export()->getRules()[0]);
+        $this->assertContains($rule, $this->builder->export()->getRules());
     }
 
     public function test_add_validation_rule_called_twice_with_same_rule_should_not_duplicate_rules_in_config()
@@ -115,8 +114,13 @@ abstract class BaseControlBuilderTest extends TestCase
 
         $this->builder->addValidationRule($rule)->addValidationRule($rule);
 
-        $this->assertCount(1, $this->builder->export()->getRules());
-        $this->assertEquals($rule, $this->builder->export()->getRules()[0]);
+        $this->assertCount(
+            1,
+            array_filter(
+                $this->builder->export()->getRules(),
+                fn ($r) => $r === 'required'
+            ),
+        );
     }
 
     public function test_add_validation_rule_called_multipel_times_with_different_rules_should_add_all_rules_to_config()
@@ -126,9 +130,8 @@ abstract class BaseControlBuilderTest extends TestCase
 
         $this->builder->addValidationRule($rule)->addValidationRule($secondRule);
 
-        $this->assertCount(2, $this->builder->export()->getRules());
-        $this->assertEquals($rule, $this->builder->export()->getRules()[0]);
-        $this->assertEquals($secondRule, $this->builder->export()->getRules()[1]);
+        $this->assertContains($rule, $this->builder->export()->getRules());
+        $this->assertContains($secondRule, $this->builder->export()->getRules());
     }
 
     public function test_add_validation_rule_with_msg_should_add_the_msg_to_config()
@@ -159,6 +162,45 @@ abstract class BaseControlBuilderTest extends TestCase
         $this->builder->addValidationRule($rule . ':some_table,id', $msg);
 
         $this->assertEquals([$this->fieldName . '.' . $rule => $msg], $this->builder->export()->getErrorMessages());
+    }
+
+    public function test_remove_validation_rule_should_remove_rule_from_config()
+    {
+        $rule = 'required';
+
+        $this->builder->removeValidationRule($rule)->removeValidationRule($rule);
+
+        $this->assertNotContains($rule, $this->builder->export()->getRules());
+    }
+
+    public function test_remove_validation_rule_should_remove_message_from_config()
+    {
+        $rule = 'required';
+        $msg = 'Some new new msg';
+
+        $this->builder->addValidationRule($rule, $msg)->removeValidationRule($rule);
+
+        $this->assertNotContains($msg, $this->builder->export()->getErrorMessages());
+    }
+
+    public function test_remove_validation_with_arguments_rule_should_remove_message_from_config()
+    {
+        $rule = 'exists:tests,id';
+        $msg = 'Some new new msg';
+
+        $this->builder->addValidationRule($rule, $msg)->removeValidationRule($rule);
+
+        $this->assertNotContains($msg, $this->builder->export()->getErrorMessages());
+    }
+
+    public function test_remove_validation_rule_as_object_should_remove_message_from_confgi()
+    {
+        $rule = new TestRule;
+        $msg = 'Some new new msg';
+
+        $this->builder->addValidationRule($rule, $msg)->removeValidationRule($rule);
+
+        $this->assertNotContains($msg, $this->builder->export()->getErrorMessages());
     }
 
     public function test_add_single_validation_rule_should_add_validation_rule_to_config()
@@ -219,5 +261,44 @@ abstract class BaseControlBuilderTest extends TestCase
         $this->builder->addSingleValidationRule($rule . ':some_table,id', $msg);
 
         $this->assertEquals([$this->fieldName . '.*.' . $rule => $msg], $this->builder->export()->getErrorMessages());
+    }
+
+    public function test_remove_single_validation_rule_should_remove_rule_from_config()
+    {
+        $rule = 'required';
+
+        $this->builder->addSingleValidationRule($rule)->removeSingleValidationRule($rule);
+
+        $this->assertNotContains($rule, $this->builder->export()->getSingleRules());
+    }
+
+    public function test_remove_single_validation_rule_should_remove_message_from_config()
+    {
+        $rule = 'required';
+        $msg = 'Some new new msg';
+
+        $this->builder->addSingleValidationRule($rule, $msg)->removeSingleValidationRule($rule);
+
+        $this->assertNotContains($msg, $this->builder->export()->getErrorMessages());
+    }
+
+    public function test_remove_single_validation_with_arguments_rule_should_remove_message_from_config()
+    {
+        $rule = 'exists:tests,id';
+        $msg = 'Some new new msg';
+
+        $this->builder->addSingleValidationRule($rule, $msg)->removeSingleValidationRule($rule);
+
+        $this->assertNotContains($msg, $this->builder->export()->getErrorMessages());
+    }
+
+    public function test_remove_single_validation_rule_as_object_should_remove_message_from_confgi()
+    {
+        $rule = new TestRule;
+        $msg = 'Some new new msg';
+
+        $this->builder->addSingleValidationRule($rule, $msg)->removeSingleValidationRule($rule);
+
+        $this->assertNotContains($msg, $this->builder->export()->getErrorMessages());
     }
 }

@@ -2,11 +2,11 @@
 
 namespace Zhelyazko777\Forms\Resolvers;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\Abstractions\BaseSelectControlResolver;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedSelectFormControl;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Zhelyazko777\LaravelSimpleMapper\SimpleMapper;
 
@@ -22,25 +22,29 @@ class SelectControlResolver extends BaseSelectControlResolver
     {
         /** @var ResolvedSelectFormControl $controlToReturn */
         $controlToReturn = SimpleMapper::map($control, new ResolvedSelectFormControl());
-        /** @var Builder $query */
-        $query = $control->getOptionsQuery();
         $fixedOptions = $control->getFixedOptions();
-        $hasFixedOptions = !empty($fixedOptions);
-        $hasQuery = !is_null($query);
+        $getOptionsQuery = $control->getGetOptionsQuery();
 
-        if (!$hasFixedOptions && !$hasQuery) {
-            throw new \Exception('You should set fixed options or add a model in order to fetch the select options.');
-        }
-
-        if (!$hasFixedOptions && $hasQuery) {
-            $optionsModel = $query->getModel();
+        if (empty($fixedOptions)) {
+            $relation = $this->getRelation($control->getName(), $model);
+            $optionsModel = get_class($relation->getModel());
             $textProp = call_user_func($optionsModel.'::selectTextProperty');
             $valueProp = call_user_func($optionsModel.'::selectValueProperty');
-            if (is_null($controlToReturn->getValue())) {
-                $controlToReturn->setValue($this->fetchFieldValue($control, $model));
-            }
+            $query = call_user_func("$optionsModel::query");
+            $relationColumnName = $relation->getRelationName();
 
+            if (!is_null($getOptionsQuery)) {
+                $query = $getOptionsQuery->call($this, [ $query ]);
+            }
             $controlToReturn->setOptions($this->getQuerySelectOptions($query, $textProp, $valueProp));
+
+            if (is_null($controlToReturn->getValue())) {
+                $controlToReturn->setValue(
+                    $relation
+                        ->first(["$relationColumnName.$valueProp"])
+                        ?->{$valueProp}
+                );
+            }
         } else {
             $controlToReturn->setOptions($this->getFixedSelectOptions($fixedOptions));
         }
@@ -48,17 +52,13 @@ class SelectControlResolver extends BaseSelectControlResolver
         return $controlToReturn;
     }
 
-    /**
-     * @param  BaseFormControlConfig  $control
-     * @param  Model  $model
-     * @return array<mixed>
-     */
-    private function fetchFieldValue(BaseFormControlConfig $control, Model $model): array
+    private function getRelation(string $controlName, Model $model): BelongsToMany
     {
-        $nameParts = explode(':', $control->getName());
+        $nameParts = explode(':', $controlName);
         $value = $model;
         foreach ($nameParts as $part) {
-            $value = $value->{$part};
+            /** @var BelongsToMany $value */
+            $value = $value->{$part}();
         }
 
         return $value;

@@ -12,6 +12,10 @@ abstract class BaseControlBuilder implements CanExport
 
     public function __construct(string $name)
     {
+        if (empty($name)) {
+            throw new \InvalidArgumentException('You should pass name different from whitespace for all of the form fields.');
+        }
+
         $this->config->setName($name);
     }
 
@@ -126,6 +130,39 @@ abstract class BaseControlBuilder implements CanExport
     }
 
     /**
+     * Removes validation rule for the field
+     * @param  mixed  $rule
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function removeValidationRule(mixed $rule): static
+    {
+        $fieldName = $this->config->getName();
+        $this->config->setRules(
+            array_filter(
+                $this->config->getRules(),
+                fn ($r) => $r !== $rule
+            )
+        );
+
+        if (is_object($rule)) {
+            $rule = (new ReflectionClass($rule))->getShortName();
+        } else if (is_string($rule)) {
+            $rule = explode(':', $rule)[0];
+        }
+
+        $this->config->setErrorMessages(
+            array_filter(
+                $this->config->getErrorMessages(),
+                fn ($r) => $r !== "$fieldName.$rule",
+                ARRAY_FILTER_USE_KEY
+            )
+        );
+
+        return $this;
+    }
+
+    /**
      * Adds rule for request items of type array
      * which will be applied to every item of the array
      * @param  mixed  $rule
@@ -154,6 +191,40 @@ abstract class BaseControlBuilder implements CanExport
                 );
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Removes rule for request items of type array
+     * which should be applied to every item of the array
+     * @param  mixed  $rule
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function removeSingleValidationRule(mixed $rule): static
+    {
+        $fieldName = $this->config->getName();
+        $this->config->setSingleRules(
+            array_filter(
+                $this->config->getSingleRules(),
+                fn ($r) => $r !== $rule
+            )
+        );
+
+        if (is_object($rule)) {
+            $rule = (new ReflectionClass($rule))->getShortName();
+        } else if (is_string($rule)) {
+            $rule = explode(':', $rule)[0];
+        }
+
+        $this->config->setErrorMessages(
+            array_filter(
+                $this->config->getErrorMessages(),
+                fn ($r) => $r !== "$fieldName.*.$rule",
+                ARRAY_FILTER_USE_KEY
+            ),
+        );
 
         return $this;
     }

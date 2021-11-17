@@ -2,6 +2,7 @@
 
 namespace Zhelyazko777\Forms\Builders;
 
+use Illuminate\Support\Str;
 use Zhelyazko777\Forms\Builders\Abstractions\BaseSelectControlBuilder;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
@@ -13,17 +14,21 @@ class MultiselectControlBuilder extends BaseSelectControlBuilder
      */
     protected BaseFormControlConfig $config;
 
+    private string $existsRule;
+
     public function __construct(string $name)
     {
         $this->config = new MultiselectFormControlConfig();
-        $this->addSingleValidationRule("exists:$name,id");
-
+        $tableName = Str::snake($name);
+        $this->existsRule = "exists:$tableName,id";
+        $this->addSingleValidationRule($this->existsRule);
         parent::__construct($name);
     }
 
-    protected function getExportType(): string
+    public function useFixedOptions(array $options): static
     {
-        return MultiselectFormControlConfig::class;
+        $this->removeSingleValidationRule($this->existsRule);
+        return parent::useFixedOptions($options);
     }
 
     /**

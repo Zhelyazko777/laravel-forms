@@ -96,4 +96,12 @@ class InputControlBuilderTest extends BaseTextControlBuilderTest
         $config = $this->builder->export();
         $this->assertEquals([$this->fieldName . '.lt' => $msg], $config->getErrorMessages());
     }
+
+    public function test_export_with_empty_string_passed_for_name_to_the_config_should_throw_invalid_argumnet_excpetion()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('You should pass name different from whitespace for all of the form fields.');
+
+        new InputControlBuilder('');
+    }
 }

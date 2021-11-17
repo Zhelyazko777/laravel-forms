@@ -13,7 +13,7 @@ abstract class BaseSelectControlBuilderTest extends BaseControlBuilderTest
     /** @var BaseSelectControlBuilder */
     protected BaseControlBuilder $builder;
 
-    public function test_add_fixed_options_should_add_static_options_to_the_config()
+    public function test_use_fixed_options_should_add_fixed_options_to_the_config()
     {
         $options = [
             [
@@ -26,30 +26,19 @@ abstract class BaseSelectControlBuilderTest extends BaseControlBuilderTest
             ],
         ];
 
-        $this->builder->addFixedOptions($options);
+        $this->builder->useFixedOptions($options);
 
         /** @var BaseSelectFormControlConfig $config */
         $config = $this->builder->export();
         $this->assertEquals($options, $config->getFixedOptions());
     }
 
-    public function test_add_model_should_set_correct_option_query_to_config()
+    public function test_use_fetched_options_should_set_get_options_query_closure_to_config()
     {
-        $this->builder->addModel(Pet::class);
+        $this->builder->useFetchedOptions(fn (Builder $b) => $b->where([1, '=', 1]));
 
         /** @var BaseSelectFormControlConfig $config */
         $config = $this->builder->export();
-        $this->assertEquals(Pet::query(), $config->getOptionsQuery());
-    }
-
-    public function test_add_model_with_callback_should_add_query_builder_to_config_query()
-    {
-        $whereRules = [1, '=', 1];
-
-        $this->builder->addModel(Pet::class, fn (Builder $b) => $b->where($whereRules));
-
-        /** @var BaseSelectFormControlConfig $config */
-        $config = $this->builder->export();
-        $this->assertEquals(Pet::query()->where($whereRules), $config->getOptionsQuery());
+        $this->assertNotNull($config->getGetOptionsQuery());
     }
 }
