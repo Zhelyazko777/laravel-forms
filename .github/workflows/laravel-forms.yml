@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  laravel-tables:
+  laravel-forms:
     runs-on: ubuntu-latest
     services:
       mysql:
