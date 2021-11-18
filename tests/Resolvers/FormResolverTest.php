@@ -100,7 +100,9 @@ class FormResolverTest extends TestCase
 
     public function test_resolve_should_set_select_control_if_provided()
     {
-        $controlConfig = (new SelectFormControlConfig)->setName('pet_type_id');
+        $controlConfig = (new SelectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setName('pet_type_id');
         $formConfig = (new FormConfig)->setControls([$controlConfig]);
 
         $resolvedForm = $this->resolver->resolve($formConfig, new Pet);
@@ -113,7 +115,9 @@ class FormResolverTest extends TestCase
 
     public function test_resolve_should_set_multiselect_control_if_provided()
     {
-        $controlConfig = (new MultiselectFormControlConfig)->setName('owners');
+        $controlConfig = (new MultiselectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setName('owners');
         $formConfig = (new FormConfig)->setControls([$controlConfig]);
 
         $resolvedForm = $this->resolver->resolve($formConfig, new Pet);
