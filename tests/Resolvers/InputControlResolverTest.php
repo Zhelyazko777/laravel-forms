@@ -7,6 +7,7 @@ use Zhelyazko777\Forms\Resolvers\InputControlResolver;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedInputFormControl;
 use Zhelyazko777\Forms\Tests\TestCase;
 use Zhelyazko777\Forms\Tests\TestClasses\Pet;
+use Zhelyazko777\Forms\Tests\TestClasses\Toy;
 
 class InputControlResolverTest extends TestCase
 {
@@ -61,5 +62,15 @@ class InputControlResolverTest extends TestCase
         $resolvedControl = $this->resolver->resolve($config, $model);
 
         $this->assertEquals(ResolvedInputFormControl::class, get_class($resolvedControl));
+    }
+
+    public function test_resolve_with_nested_property_should_fetch_the_value_correctly()
+    {
+        $config = (new InputFormControlConfig)->setName('pet.name');
+        $model = Toy::find(2);
+
+        $resolvedControl = $this->resolver->resolve($config, $model);
+
+        $this->assertEquals($model->pet->name, $resolvedControl->getValue());
     }
 }

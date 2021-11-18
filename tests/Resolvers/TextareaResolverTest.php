@@ -7,6 +7,7 @@ use Zhelyazko777\Forms\Resolvers\Models\ResolvedTextareaFormControl;
 use Zhelyazko777\Forms\Resolvers\TextareaControlResolver;
 use Zhelyazko777\Forms\Tests\TestCase;
 use Zhelyazko777\Forms\Tests\TestClasses\Pet;
+use Zhelyazko777\Forms\Tests\TestClasses\Toy;
 
 class TextareaResolverTest extends TestCase
 {
@@ -61,5 +62,15 @@ class TextareaResolverTest extends TestCase
         $resolvedControl = $this->resolver->resolve($config, $model);
 
         $this->assertEquals(ResolvedTextareaFormControl::class, get_class($resolvedControl));
+    }
+
+    public function test_resolve_with_nested_property_should_fetch_the_value_correctly()
+    {
+        $config = (new TextareaFormControlConfig)->setName('pet.name');
+        $model = Toy::find(2);
+
+        $resolvedControl = $this->resolver->resolve($config, $model);
+
+        $this->assertEquals($model->pet->name, $resolvedControl->getValue());
     }
 }

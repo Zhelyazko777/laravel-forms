@@ -7,6 +7,7 @@ use Zhelyazko777\Forms\Resolvers\Models\ResolvedSwitchFormControl;
 use Zhelyazko777\Forms\Resolvers\SwitchControlResolver;
 use Zhelyazko777\Forms\Tests\TestCase;
 use Zhelyazko777\Forms\Tests\TestClasses\Pet;
+use Zhelyazko777\Forms\Tests\TestClasses\Toy;
 
 class SwitchControlResolverTest extends TestCase
 {
@@ -61,5 +62,15 @@ class SwitchControlResolverTest extends TestCase
         $resolvedControl = $this->resolver->resolve($config, $model);
 
         $this->assertEquals(ResolvedSwitchFormControl::class, get_class($resolvedControl));
+    }
+
+    public function test_resolve_with_nested_property_should_fetch_the_value_correctly()
+    {
+        $config = (new SwitchFormControlConfig)->setName('pet.is_trained');
+        $model = Toy::find(2);
+
+        $resolvedControl = $this->resolver->resolve($config, $model);
+
+        $this->assertEquals($model->pet->is_trained, $resolvedControl->getValue());
     }
 }
