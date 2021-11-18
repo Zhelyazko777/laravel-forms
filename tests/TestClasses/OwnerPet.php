@@ -2,15 +2,9 @@
 
 namespace Zhelyazko777\Forms\Tests\TestClasses;
 
-use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class OwnerPet extends Model
+class OwnerPet extends Pivot
 {
-    use HasTimestamps, SoftDeletes;
 
-    protected $fillable = ['*'];
-
-    protected $table = 'owner_pet';
 }

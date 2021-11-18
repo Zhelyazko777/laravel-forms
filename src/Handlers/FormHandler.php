@@ -7,6 +7,7 @@ use Zhelyazko777\Forms\Builders\Models\FormConfig;
 use Zhelyazko777\Forms\Builders\Models\InputFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\SelectFormControlConfig;
+use Zhelyazko777\Forms\Builders\Models\SwitchFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\TextareaFormControlConfig;
 use Zhelyazko777\Forms\Handlers\Abstractions\BaseControlHandler;
 use Zhelyazko777\Forms\Handlers\Contracts\FormHandlerInterface;
@@ -19,9 +20,10 @@ class FormHandler implements FormHandlerInterface
      */
     private array $handlers = [
         MultiselectFormControlConfig::class => BelongsToManyHandler::class,
-        SelectFormControlConfig::class => BasicValueHandler::class,
-        InputFormControlConfig::class => BasicValueHandler::class,
-        TextareaFormControlConfig::class => BasicValueHandler::class,
+        SelectFormControlConfig::class => NonRelationValueHandler::class,
+        InputFormControlConfig::class => NonRelationValueHandler::class,
+        TextareaFormControlConfig::class => NonRelationValueHandler::class,
+        SwitchFormControlConfig::class => NonRelationValueHandler::class,
     ];
 
     /**
@@ -32,9 +34,10 @@ class FormHandler implements FormHandlerInterface
      */
     public function handle(FormConfig $config, Model $model, array $requestData): void
     {
+        $propertyNames = array_keys($requestData);
         \DB::beginTransaction();
         try {
-            foreach (array_keys($requestData) as $propName)
+            foreach ($propertyNames as $propName)
             {
                 $value = $requestData[$propName];
                 $controlArr = array_filter(

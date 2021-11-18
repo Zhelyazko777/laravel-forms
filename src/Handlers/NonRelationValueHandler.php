@@ -6,7 +6,7 @@ use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Handlers\Abstractions\BaseControlHandler;
 use Illuminate\Database\Eloquent\Model;
 
-class BasicValueHandler extends BaseControlHandler
+class NonRelationValueHandler extends BaseControlHandler
 {
     public function handle(BaseFormControlConfig $config, Model $model, string $propertyName, mixed $value): void
     {
