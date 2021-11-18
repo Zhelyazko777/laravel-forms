@@ -2,9 +2,9 @@
 
 namespace Zhelyazko777\Forms\Tests\TestClasses;
 
-use Zhelyazko777\Forms\Abstractions\SelectableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class PetType extends SelectableModel
+class PetType extends Model
 {
     public $timestamps = false;
 

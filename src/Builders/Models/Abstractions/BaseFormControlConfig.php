@@ -2,8 +2,6 @@
 
 namespace Zhelyazko777\Forms\Builders\Models\Abstractions;
 
-use phpDocumentor\Reflection\Types\Callable_;
-
 abstract class BaseFormControlConfig
 {
     private string $label = '';
@@ -41,9 +39,9 @@ abstract class BaseFormControlConfig
 
     /**
      * @param  \Closure|null  $getOptionsQuery
-     * @return BaseFormControlConfig
+     * @return static
      */
-    public function setGetOptionsQuery(?\Closure $getOptionsQuery): BaseFormControlConfig
+    public function setGetOptionsQuery(?\Closure $getOptionsQuery): static
     {
         $this->getOptionsQuery = $getOptionsQuery;
         return $this;
@@ -59,9 +57,9 @@ abstract class BaseFormControlConfig
 
     /**
      * @param  mixed  $value
-     * @return BaseFormControlConfig
+     * @return static
      */
-    public function setValue(mixed $value): BaseFormControlConfig
+    public function setValue(mixed $value): static
     {
         $this->value = $value;
         return $this;
@@ -77,9 +75,9 @@ abstract class BaseFormControlConfig
 
     /**
      * @param  bool  $hidden
-     * @return BaseFormControlConfig
+     * @return static
      */
-    public function setHidden(bool $hidden): BaseFormControlConfig
+    public function setHidden(bool $hidden): static
     {
         $this->hidden = $hidden;
         return $this;
@@ -229,9 +227,9 @@ abstract class BaseFormControlConfig
 
     /**
      * @param  array<string>  $singleRules
-     * @return self
+     * @return static
      */
-    public function setSingleRules(array $singleRules): self
+    public function setSingleRules(array $singleRules): static
     {
         $this->singleRules = $singleRules;
         return $this;

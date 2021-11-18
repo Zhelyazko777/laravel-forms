@@ -36,4 +36,26 @@ abstract class BaseSelectControlBuilder extends BaseControlBuilder
 
         return $this;
     }
+
+    /**
+     * Adds the property which should be used for the value of the options
+     * @param  string  $property
+     * @return $this
+     */
+    public function valueProperty(string $property): static
+    {
+        $this->config->setOptionValueProperty($property);
+        return $this;
+    }
+
+    /**
+     * Adds the property which should be used for the text of the options
+     * @param  string  $property
+     * @return $this
+     */
+    public function textProperty(string $property): static
+    {
+        $this->config->setOptionTextProperty($property);
+        return $this;
+    }
 }

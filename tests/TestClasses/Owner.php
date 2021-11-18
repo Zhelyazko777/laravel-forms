@@ -4,10 +4,8 @@ namespace Zhelyazko777\Forms\Tests\TestClasses;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Zhelyazko777\Forms\Abstractions\SelectableModel;
 
-class Owner extends SelectableModel
+class Owner extends Model
 {
     public $timestamps = false;
 

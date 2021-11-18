@@ -25,7 +25,9 @@ class MultiselectResolverTest extends TestCase
 
     public function test_resolve_should_return_resolved_multiselect_form_control_instance()
     {
-        $config = (new MultiselectFormControlConfig())->setName('owners');
+        $config = (new MultiselectFormControlConfig())
+            ->setOptionTextProperty('name')
+            ->setName('owners');
 
         $resolvedControl = $this->resolver->resolve($config, new Pet);
 
@@ -53,7 +55,9 @@ class MultiselectResolverTest extends TestCase
 
     public function test_resolve_should_fetch_options_if_options_query_provided()
     {
-        $config = (new MultiselectFormControlConfig)->setName('pets');
+        $config = (new MultiselectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setName('pets');
 
         /** @var ResolvedMultiselectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, new Owner);
@@ -85,7 +89,10 @@ class MultiselectResolverTest extends TestCase
 
     public function test_resolve_should_override_value_with_fixed_value_if_provided_on_options_query()
     {
-        $config = (new SelectFormControlConfig)->setName('owners')->setValue([1, 2]);
+        $config = (new SelectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setName('owners')
+            ->setValue([1, 2]);
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, new Pet);
@@ -95,7 +102,9 @@ class MultiselectResolverTest extends TestCase
 
     public function test_resolve_should_fetch_value_for_the_field_if_no_value_provided()
     {
-        $config = (new SelectFormControlConfig)->setName('pets');
+        $config = (new SelectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setName('pets');
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, Owner::first());
@@ -137,5 +146,31 @@ class MultiselectResolverTest extends TestCase
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, Home::find(1));
+    }
+
+    public function test_resolve_without_option_text_property_in_config_should_throw_an_exception()
+    {
+        $optionsModel = Owner::class;
+        $this->expectExceptionMessage("You should add a text property for the $optionsModel options");
+
+        $config = (new MultiselectFormControlConfig)->setName('owners');
+
+        $this->resolver->resolve($config, Pet::find(2));
+    }
+
+    public function test_resolve_can_override_default_option_value_property_in_config()
+    {
+        $config = (new SelectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setOptionValueProperty('name')
+            ->setName('owners');
+
+        /** @var ResolvedMultiselectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, new Pet);
+
+        $this->assertEquals(
+            Owner::query()->get([ 'name AS text', 'name AS value' ])->toArray(),
+            $resolvedControl->getOptions()
+        );
     }
 }

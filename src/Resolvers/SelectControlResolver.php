@@ -5,6 +5,7 @@ namespace Zhelyazko777\Forms\Resolvers;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
+use Zhelyazko777\Forms\Builders\Models\SelectFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\Abstractions\BaseSelectControlResolver;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedSelectFormControl;
@@ -14,7 +15,7 @@ use Zhelyazko777\LaravelSimpleMapper\SimpleMapper;
 class SelectControlResolver extends BaseSelectControlResolver
 {
     /**
-     * @param  BaseFormControlConfig  $control
+     * @param  SelectFormControlConfig  $control
      * @param  Model  $model
      * @return BaseResolvedFormControl
      * @throws \Exception
@@ -29,8 +30,13 @@ class SelectControlResolver extends BaseSelectControlResolver
         if (empty($fixedOptions)) {
             $modelNamespace = $this->getModelNamespace($model);
             $optionsModel = $this->getOptionsModel($control->getName(), $modelNamespace);
-            $textProp = call_user_func($optionsModel.'::selectTextProperty');
-            $valueProp = call_user_func($optionsModel.'::selectValueProperty');
+            $textProp = $control->getOptionTextProperty();
+            $valueProp = $control->getOptionValueProperty();
+
+            if (empty($textProp)) {
+                throw new \Exception("You should add a text property for the $optionsModel options");
+            }
+
             $query = call_user_func("$optionsModel::query");
             if (!is_null($getOptionsQuery)) {
                 $query = $getOptionsQuery->call($this, [ $query ]);

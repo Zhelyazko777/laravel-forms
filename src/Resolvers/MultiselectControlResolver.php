@@ -4,6 +4,7 @@ namespace Zhelyazko777\Forms\Resolvers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
+use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\Abstractions\BaseSelectControlResolver;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedMultiselectFormControl;
@@ -13,7 +14,7 @@ use Zhelyazko777\LaravelSimpleMapper\SimpleMapper;
 class MultiselectControlResolver extends BaseSelectControlResolver
 {
     /**
-     * @param  BaseFormControlConfig  $control
+     * @param  MultiselectFormControlConfig  $control
      * @param  Model  $model
      * @return BaseResolvedFormControl
      * @throws \Exception
@@ -28,8 +29,13 @@ class MultiselectControlResolver extends BaseSelectControlResolver
 
         if (empty($fixedOptions)) {
             $optionsModel = get_class($relation->getModel());
-            $textProp = call_user_func($optionsModel.'::selectTextProperty');
-            $valueProp = call_user_func($optionsModel.'::selectValueProperty');
+            $textProp = $control->getOptionTextProperty();
+            $valueProp = $control->getOptionValueProperty();
+
+            if (empty($textProp)) {
+                throw new \Exception("You should add a text property for the $optionsModel options");
+            }
+
             $query = call_user_func("$optionsModel::query");
 
             if (!is_null($getOptionsQuery)) {
