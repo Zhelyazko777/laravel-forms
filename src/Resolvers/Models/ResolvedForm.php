@@ -6,9 +6,12 @@ use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\ButtonFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\FormConfig;
 use Zhelyazko777\Forms\Resolvers\Models\Abstractions\BaseResolvedFormControl;
+use Zhelyazko777\Utilities\Exportable;
 
-class ResolvedForm
+class ResolvedForm implements \JsonSerializable
 {
+    use Exportable;
+
     public function __construct(
         private FormConfig $config
     ) { }
