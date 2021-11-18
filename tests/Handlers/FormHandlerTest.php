@@ -6,6 +6,7 @@ use Zhelyazko777\Forms\Builders\Models\FormConfig;
 use Zhelyazko777\Forms\Builders\Models\InputFormControlConfig;
 use Zhelyazko777\Forms\Handlers\FormHandler;
 use Zhelyazko777\Forms\Tests\TestCase;
+use Zhelyazko777\Forms\Tests\TestClasses\Pet;
 use Zhelyazko777\Forms\Tests\TestClasses\Toy;
 
 class FormHandlerTest extends TestCase
@@ -31,5 +32,18 @@ class FormHandlerTest extends TestCase
         $createdModel = Toy::find(6);
         $this->assertNotNull($createdModel);
         $this->assertEquals($value, $createdModel->name);
+    }
+
+    public function test_handle_should_rethrow_exception_if_occure()
+    {
+        $this->expectException(\Exception::class);
+
+        $value = 'Some value';
+        $formConfig = (new FormConfig)
+            ->setControls([
+                (new InputFormControlConfig)->setName('name'),
+            ]);
+
+        $this->handler->handle($formConfig, new Pet, [ 'name' => $value ]);
     }
 }

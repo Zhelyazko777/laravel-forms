@@ -55,6 +55,7 @@ class FormHandler implements FormHandlerInterface
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
+            throw new \Exception('', 0, $e);
         }
     }
 }
