@@ -39,7 +39,7 @@ class SelectControlResolver extends BaseSelectControlResolver
 
             $query = call_user_func("$optionsModel::query");
             if (!is_null($getOptionsQuery)) {
-                $query = $getOptionsQuery->call($this, $query);
+                $getOptionsQuery->call($this, $query);
             }
             $controlToReturn->setOptions($this->getQuerySelectOptions($query, $textProp, $valueProp));
         } else {
