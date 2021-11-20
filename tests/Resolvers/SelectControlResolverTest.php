@@ -2,6 +2,7 @@
 
 namespace Zhelyazko777\Forms\Tests\Resolvers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Zhelyazko777\Forms\Builders\Models\SelectFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedSelectFormControl;
 use Zhelyazko777\Forms\Resolvers\SelectControlResolver;
@@ -165,6 +166,26 @@ class SelectControlResolverTest extends TestCase
 
         $this->assertEquals(
             PetType::query()->get([ 'name AS text', 'name AS value' ])->toArray(),
+            $resolvedControl->getOptions()
+        );
+    }
+
+    public function test_resolve_should_apply_query_builder_to_options_query()
+    {
+        $config = (new SelectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setGetOptionsQuery(
+                \Closure::fromCallable(
+                    fn (Builder $query) => $query->where('name', '!=', 'Dog')
+                )
+            )
+            ->setName('pet_type_id');
+
+        /** @var ResolvedSelectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, new Pet);
+
+        $this->assertEquals(
+            PetType::where('name', '!=', 'Dog')->get([ 'name AS text', 'id AS value' ])->toArray(),
             $resolvedControl->getOptions()
         );
     }

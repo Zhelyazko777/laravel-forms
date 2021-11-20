@@ -2,6 +2,7 @@
 
 namespace Zhelyazko777\Forms\Tests\Resolvers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\SelectFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedMultiselectFormControl;
@@ -158,9 +159,29 @@ class MultiselectResolverTest extends TestCase
         $this->resolver->resolve($config, Pet::find(2));
     }
 
+    public function test_resolve_should_apply_query_builder_to_options_query()
+    {
+        $config = (new MultiselectFormControlConfig)
+            ->setOptionTextProperty('name')
+            ->setGetOptionsQuery(
+                \Closure::fromCallable(
+                    fn (Builder $query) => $query->where('name', '!=', 'Max')
+                )
+            )
+            ->setName('owners');
+
+        /** @var ResolvedMultiselectFormControl $resolvedControl */
+        $resolvedControl = $this->resolver->resolve($config, new Pet);
+
+        $this->assertEquals(
+            Owner::where('name', '!=', 'Max')->get([ 'name AS text', 'id AS value' ])->toArray(),
+            $resolvedControl->getOptions()
+        );
+    }
+
     public function test_resolve_can_override_default_option_value_property_in_config()
     {
-        $config = (new SelectFormControlConfig)
+        $config = (new MultiselectFormControlConfig)
             ->setOptionTextProperty('name')
             ->setOptionValueProperty('name')
             ->setName('owners');
