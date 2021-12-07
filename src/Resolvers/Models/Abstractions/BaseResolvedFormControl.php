@@ -6,7 +6,9 @@ use Zhelyazko777\Utilities\Exportable;
 
 abstract class BaseResolvedFormControl implements \JsonSerializable
 {
-    use Exportable;
+    use Exportable {
+        jsonSerialize as baseJsonSerialize;
+    }
 
     private string $label = '';
 
@@ -242,5 +244,23 @@ abstract class BaseResolvedFormControl implements \JsonSerializable
     {
         $this->disabled = $disabled;
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $result = $this->baseJsonSerialize();
+
+        $result['rules'] = array_map(
+            function ($rule) {
+                if (is_object($rule)) {
+                    return (new \ReflectionClass($rule))->getShortName();
+                }
+
+                return $rule;
+            },
+            $result['rules']
+        );
+
+        return $result;
     }
 }
