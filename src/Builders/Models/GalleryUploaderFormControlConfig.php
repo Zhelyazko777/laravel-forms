@@ -3,12 +3,9 @@
 namespace Zhelyazko777\Forms\Builders\Models;
 
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
-use Zhelyazko777\Utilities\Exportable;
 
 class GalleryUploaderFormControlConfig extends BaseFormControlConfig
 {
-    use Exportable;
-
     private string $uploadRoute = '';
 
     private string $removeImageRoute = '';
