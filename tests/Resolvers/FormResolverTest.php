@@ -4,12 +4,14 @@ namespace Zhelyazko777\Forms\Tests\Resolvers;
 
 use Zhelyazko777\Forms\Builders\Models\ButtonFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\FormConfig;
+use Zhelyazko777\Forms\Builders\Models\GalleryUploaderFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\InputFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\SelectFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\SwitchFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\TextareaFormControlConfig;
 use Zhelyazko777\Forms\Resolvers\FormResolver;
+use Zhelyazko777\Forms\Resolvers\Models\ResolvedGalleryUploaderFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedInputFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedMultiselectFormControl;
 use Zhelyazko777\Forms\Resolvers\Models\ResolvedSelectFormControl;
@@ -124,6 +126,19 @@ class FormResolverTest extends TestCase
 
         $this->assertEquals(
             ResolvedMultiselectFormControl::class,
+            get_class(current($resolvedForm->getControls()))
+        );
+    }
+
+    public function test_resolve_should_set_gallery_uploader_control_if_provided()
+    {
+        $controlConfig = (new GalleryUploaderFormControlConfig);
+        $formConfig = (new FormConfig)->setControls([$controlConfig]);
+
+        $resolvedForm = $this->resolver->resolve($formConfig, new Pet);
+
+        $this->assertEquals(
+            ResolvedGalleryUploaderFormControl::class,
             get_class(current($resolvedForm->getControls()))
         );
     }
