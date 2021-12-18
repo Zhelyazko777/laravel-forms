@@ -3,13 +3,9 @@
 namespace Zhelyazko777\Forms\Builders\Models;
 
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
-use Zhelyazko777\Forms\Builders\Models\Contracts\ExcludeFromCommonRequestInterface;
-use Zhelyazko777\Forms\Builders\Models\Contracts\NonResolvableControlInterface;
 use Zhelyazko777\Utilities\Exportable;
 
-class GalleryUploaderFormControlConfig
-    extends BaseFormControlConfig
-    implements NonResolvableControlInterface, ExcludeFromCommonRequestInterface, \JsonSerializable
+class GalleryUploaderFormControlConfig extends BaseFormControlConfig
 {
     use Exportable;
 

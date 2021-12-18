@@ -3,7 +3,6 @@
 namespace Zhelyazko777\Forms\Resolvers;
 
 use Zhelyazko777\Forms\Builders\Models\Abstractions\BaseFormControlConfig;
-use Zhelyazko777\Forms\Builders\Models\Contracts\NonResolvableControlInterface;
 use Zhelyazko777\Forms\Builders\Models\FormConfig;
 use Zhelyazko777\Forms\Builders\Models\InputFormControlConfig;
 use Zhelyazko777\Forms\Builders\Models\MultiselectFormControlConfig;
@@ -50,14 +49,12 @@ class FormResolver implements FormResolverInterface
         foreach ($controls as $control)
         {
             $controlClass = get_class($control);
-            if (array_key_exists($controlClass, $this->controlResolvers)) {
-                $resolver = new ($this->controlResolvers[$controlClass])();
-                $result[] = $resolver->resolve($control, $model);
-            } else if ($control instanceof NonResolvableControlInterface && $control instanceof \JsonSerializable) {
-                $result[] = $control;
-            } else {
-                throw new \Exception('Form control type should be bind to Resolver class or should implement NonResolvableControlInterface and JsonSerializable');
+            if (!array_key_exists($controlClass, $this->controlResolvers)) {
+                throw new \Exception('Form control type should be bind to Resolver class.');
             }
+
+            $resolver = new ($this->controlResolvers[$controlClass])();
+            $result[] = $resolver->resolve($control, $model);
         }
 
         return $result;
