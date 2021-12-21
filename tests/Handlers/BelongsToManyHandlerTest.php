@@ -24,7 +24,7 @@ class BelongsToManyHandlerTest extends TestCase
         $model = Pet::find(2);
         $config = (new MultiselectFormControlConfig)->setName('owners');
 
-        $this->handler->handle($config, $model, 'owners', []);
+        $this->handler->handle($config, $model, []);
 
         $this->assertEmpty($model->fresh()->ownersWithSoftDeleted);
     }
@@ -35,7 +35,7 @@ class BelongsToManyHandlerTest extends TestCase
         $model = Pet::find(2);
         $config = (new MultiselectFormControlConfig)->setName('owners');
 
-        $this->handler->handle($config, $model, 'owners', $ownerIds);
+        $this->handler->handle($config, $model, $ownerIds);
 
         $ownerPets = OwnerPet::where('pet_id', $model->id)->orderBy('pet_id')->get();
         $this->assertCount(2, $ownerPets);
@@ -50,7 +50,7 @@ class BelongsToManyHandlerTest extends TestCase
             ->setName('owners')
             ->setSoftDeleteConnections(true);
 
-        $this->handler->handle($config, $model, 'owners', []);
+        $this->handler->handle($config, $model, []);
 
         $ownersWithSoftDeleted = $model
             ->fresh()
@@ -69,7 +69,7 @@ class BelongsToManyHandlerTest extends TestCase
             ->setName('owners')
             ->setSoftDeleteConnections(true);
 
-        $this->handler->handle($config, $model, 'owners', $ownerIds);
+        $this->handler->handle($config, $model, $ownerIds);
 
         $ownerPets = OwnerPet::query()->where('pet_id', $model->id)
             ->orderBy('pet_id')
@@ -89,7 +89,7 @@ class BelongsToManyHandlerTest extends TestCase
             ->setName('owners')
             ->setSoftDeleteConnections(true);
 
-        $this->handler->handle($config, $model, 'owners', $ownerIds);
+        $this->handler->handle($config, $model, $ownerIds);
 
         $ownerPets = OwnerPet::query()->where('pet_id', $model->id)->get();
         $this->assertCount(1, $ownerPets);

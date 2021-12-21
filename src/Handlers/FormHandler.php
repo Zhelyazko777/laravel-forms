@@ -48,7 +48,7 @@ class FormHandler implements FormHandlerInterface
 
                 /** @var BaseControlHandler $handler */
                 $handler = new $this->handlers[get_class($controlConfig)]();
-                $handler->handle($controlConfig, $model, $propName, $value);
+                $handler->handle($controlConfig, $model, $value);
             }
 
             $model->save();

@@ -136,7 +136,7 @@ class SelectControlResolverTest extends TestCase
     {
         $config = (new SelectFormControlConfig)
             ->setOptionTextProperty('name')
-            ->setName('pet.pet_type_id');
+            ->setName('pet:pet_type_id');
 
         /** @var ResolvedSelectFormControl $resolvedControl */
         $resolvedControl = $this->resolver->resolve($config, Toy::find(2));
@@ -149,7 +149,7 @@ class SelectControlResolverTest extends TestCase
         $optionsModel = PetType::class;
         $this->expectExceptionMessage("You should add a text property for the $optionsModel options");
 
-        $config = (new SelectFormControlConfig)->setName('pet.pet_type_id');
+        $config = (new SelectFormControlConfig)->setName('pet:pet_type_id');
 
         $this->resolver->resolve($config, Toy::find(2));
     }

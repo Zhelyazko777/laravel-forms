@@ -11,7 +11,7 @@ abstract class BaseNonRelationControlResolver implements ControlResolverInterfac
     protected function populateValue(Model $model, BaseResolvedFormControl $formControl): BaseResolvedFormControl
     {
         if (is_null($formControl->getValue())) {
-            $nameParts = explode('.', $formControl->getName());
+            $nameParts = explode(':', $formControl->getName());
             $value = $model;
             foreach ($nameParts as $part) {
                 $value = $value->{$part};

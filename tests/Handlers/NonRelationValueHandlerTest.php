@@ -22,9 +22,9 @@ class NonRelationValueHandlerTest extends TestCase
     {
         $value = 'Some value';
         $model = Pet::find(2);
-        $inputConfig = (new InputFormControlConfig)->setName('toy.name');
+        $inputConfig = (new InputFormControlConfig)->setName('toy:name');
 
-        $this->handler->handle($inputConfig, $model, 'toy.name', $value);
+        $this->handler->handle($inputConfig, $model, $value);
 
         $this->assertEquals($value, $model->fresh()->toy->name);
     }

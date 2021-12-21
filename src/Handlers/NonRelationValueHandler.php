@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class NonRelationValueHandler extends BaseControlHandler
 {
-    public function handle(BaseFormControlConfig $config, Model $model, string $propertyName, mixed $value): void
+    public function handle(BaseFormControlConfig $config, Model $model, mixed $value): void
     {
-        $propNameParts = explode('.', $propertyName);
+        $propNameParts = explode(':', $config->getName());
         switch (count($propNameParts)) {
             case 1:
                 $model->{$propNameParts[0]} = $value;

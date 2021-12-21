@@ -16,7 +16,7 @@ abstract class BaseControlBuilder implements CanExport
             throw new \InvalidArgumentException('You should pass name different from whitespace for all of the form fields.');
         }
 
-        $this->config->setName($name);
+        $this->config->setName(str_replace('.', ':', $name));
     }
 
     /**

@@ -61,7 +61,7 @@ class SelectControlResolver extends BaseSelectControlResolver
 
     private function getOptionsModel(string $propertyName, string $namespace): string
     {
-        $propertyParts = explode('.', $propertyName);
+        $propertyParts = explode(':', $propertyName);
         $property = end($propertyParts);
         $tableName = str_replace('_id', '', $property);
         $dbModelName = Str::studly(Str::singular($tableName));
@@ -71,7 +71,7 @@ class SelectControlResolver extends BaseSelectControlResolver
 
     private function fetchValue(string $controlName, Model $model): mixed
     {
-        $nameParts = explode('.', $controlName);
+        $nameParts = explode(':', $controlName);
         $value = $model;
         foreach ($nameParts as $part) {
             $value = $value->{$part};

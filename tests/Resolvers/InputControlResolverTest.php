@@ -66,7 +66,7 @@ class InputControlResolverTest extends TestCase
 
     public function test_resolve_with_nested_property_should_fetch_the_value_correctly()
     {
-        $config = (new InputFormControlConfig)->setName('pet.name');
+        $config = (new InputFormControlConfig)->setName('pet:name');
         $model = Toy::find(2);
 
         $resolvedControl = $this->resolver->resolve($config, $model);

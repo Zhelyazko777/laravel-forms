@@ -12,6 +12,13 @@ abstract class BaseControlBuilderTest extends TestCase
 
     protected string $fieldName = 'test_field';
 
+    public function test_constructor_transforms_relation_separator_dot_with_semicolumn()
+    {
+        $builder = new (get_class($this->builder))('prop.nested_prop');
+
+        $this->assertEquals('prop:nested_prop', $builder->export()->getName());
+    }
+
     public function test_take_columns_should_set_columns_to_take_to_config()
     {
         $numberOfColumns = 6;

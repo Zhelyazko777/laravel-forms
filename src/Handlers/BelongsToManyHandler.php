@@ -15,14 +15,13 @@ class BelongsToManyHandler extends BaseControlHandler
     /**
      * @param  MultiselectFormControlConfig  $config
      * @param  Model  $model
-     * @param  string  $propertyName
      * @param  mixed  $value
      * @throws \Exception
      */
-    public function handle(BaseFormControlConfig $config, Model $model, string $propertyName, mixed $value): void
+    public function handle(BaseFormControlConfig $config, Model $model, mixed $value): void
     {
         /** @var BelongsToMany $relation */
-        $relation = $this->getRelationship($model, $propertyName);
+        $relation = $this->getRelationship($model, $config->getName());
         $shouldSoftDeleteConnections = $config->getSoftDeleteConnections();
 
         if ($shouldSoftDeleteConnections) {

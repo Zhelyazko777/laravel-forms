@@ -10,7 +10,7 @@ abstract class BaseControlHandler implements ControlHandlerInterface
 {
     protected function getRelationship(Model $model, string $propertyName): Relation
     {
-        $propNameParts = explode('.', $propertyName);
+        $propNameParts = explode(':', $propertyName);
         switch (count($propNameParts)) {
             case 1:
                 return $model->{$propNameParts[0]}();

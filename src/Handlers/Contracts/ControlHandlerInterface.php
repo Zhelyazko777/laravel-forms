@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 interface ControlHandlerInterface
 {
-    public function handle(BaseFormControlConfig $config, Model $model, string $propertyName, mixed $value): void;
+    public function handle(BaseFormControlConfig $config, Model $model, mixed $value): void;
 }
