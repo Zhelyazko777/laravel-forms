@@ -9,7 +9,7 @@ class Phone implements Rule
     public function passes($attribute, $value): bool
     {
         if ($value) {
-            return preg_match('/^(\+)?(359|0)8[0-9]{8}$/', $value) === 1;
+            return preg_match('/^(\+)?(359|0)(8|9)[0-9]{8}$/', $value) === 1;
         }
 
         return true;
